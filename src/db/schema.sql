@@ -119,3 +119,17 @@ END $$;
 -- ENABLE REALTIME (This must be done for statuses and chat to live-update)
 ALTER PUBLICATION supabase_realtime ADD TABLE public.requests;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
+
+-- === STORAGE SETUP (Run these in SQL Editor) ===
+-- Create bucket if not exists via SQL (requires supabase admin / dashboard usually)
+-- Note: It's better to create the bucket 'requests' in the Dashboard Storage tab manually.
+
+-- Storage Policies for 'requests' bucket (Run these AFTER manual bucket creation)
+-- 1. Give users permission to upload their own files
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('requests', 'requests', true) ON CONFLICT DO NOTHING;
+
+-- Policy: Allow authenticated users to upload to 'requests' bucket
+-- CREATE POLICY "Users can upload their own files" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'requests' AND auth.role() = 'authenticated');
+
+-- Policy: Allow public to view 'requests' bucket files (if set to public)
+-- CREATE POLICY "Public can view request files" ON storage.objects FOR SELECT USING (bucket_id = 'requests');

@@ -71,13 +71,16 @@ export async function createRequest(formData: FormData) {
         status: 'pending'
       })
 
-    if (dbError) throw new Error(`Database error: ${dbError.message}`)
+    if (dbError) {
+      console.error('Database Insertion Error:', dbError)
+      throw new Error(`Database error: ${dbError.message}`)
+    }
 
     revalidatePath('/dashboard')
     return { success: true }
   } catch (error: any) {
-    console.error('Create Request Error:', error.message)
-    return { success: false, error: error.message || 'An unexpected error occurred' }
+    console.error('Detailed Create Request Error:', error)
+    return { success: false, error: error.message || 'An unexpected server error occurred. Please check your Supabase logs.' }
   }
 }
 

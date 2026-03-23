@@ -19,15 +19,29 @@ export default function CreateRequestPage() {
   async function handleSubmit(formData: FormData) {
     setLoading(true)
     setError(null)
+    
+    // File size check for Vercel 4.5MB limit
+    const pFile = formData.get('prescription') as File
+    const photoFile = formData.get('patient_photo') as File
+    const totalSize = (pFile?.size || 0) + (photoFile?.size || 0)
+    
+    if (totalSize > 4 * 1024 * 1024) {
+      setError("Images are too large. Total size must be under 4MB. Try smaller images or screenshots.")
+      setLoading(false)
+      return
+    }
+
     try {
       const result = await createRequest(formData)
       if (result?.error) {
         setError(result.error)
         setLoading(false)
+      } else {
+        router.push('/dashboard')
       }
     } catch (err: any) {
-      console.error(err)
-      setError("Network or Server error. Please try again or check your internet connection.")
+      console.error('Submission failed:', err)
+      setError(`Submission failed: ${err.message || 'Check your internet connection or try smaller files.'}`)
       setLoading(false)
     }
   }

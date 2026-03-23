@@ -7,13 +7,12 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Heart, Mail, Lock, ArrowLeft } from 'lucide-react'
 import { signIn, signInWithGoogle } from '@/actions/auth'
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { message?: string; error?: string }
+  searchParams: Promise<{ message?: string; error?: string }>
 }) {
-  const message = searchParams?.message
-  const error = searchParams?.error
+  const { message, error } = await searchParams
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-stone-50/50 p-4 sm:p-6 lg:p-8">

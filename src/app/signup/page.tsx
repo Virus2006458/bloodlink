@@ -9,12 +9,12 @@ import { signUp, signInWithGoogle } from '@/actions/auth'
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
-export default function SignupPage({
+export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: { error?: string }
+  searchParams: Promise<{ error?: string }>
 }) {
-  const error = searchParams?.error
+  const { error } = await searchParams
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-stone-50 p-4">

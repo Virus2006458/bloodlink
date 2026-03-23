@@ -4,7 +4,7 @@ import { createClient } from '@/lib/server-supabase'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
-export async function signUp(formData: FormData): Promise<void> {
+export async function signUp(formData: FormData) {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
@@ -13,6 +13,10 @@ export async function signUp(formData: FormData): Promise<void> {
   const role = formData.get('role') as 'donor' | 'receiver'
   const bloodGroup = formData.get('blood_group') as string
   const city = formData.get('city') as string
+
+  if (!email || !password || !name) {
+    return { error: 'Missing required fields' }
+  }
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -30,7 +34,7 @@ export async function signUp(formData: FormData): Promise<void> {
 
   if (error) {
     console.error(error.message)
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`)
+    return { error: error.message }
   }
 
   if (data.user) {
@@ -46,7 +50,7 @@ export async function signUp(formData: FormData): Promise<void> {
 
     if (profileError) {
       console.error('Profile insertion error:', profileError)
-      redirect('/signup?error=Profile creation failed')
+      return { error: 'Profile creation failed' }
     }
   }
 
@@ -54,7 +58,7 @@ export async function signUp(formData: FormData): Promise<void> {
   redirect('/login?message=Check your email to confirm your account.')
 }
 
-export async function signIn(formData: FormData): Promise<void> {
+export async function signIn(formData: FormData) {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
@@ -116,7 +120,7 @@ export async function getUserProfile() {
   return profile
 }
 
-export async function completeOnboarding(formData: FormData): Promise<void> {
+export async function completeOnboarding(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -141,7 +145,7 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
 
   if (error) {
     console.error('Onboarding failed:', error)
-    redirect('/onboarding?error=Onboarding failed')
+    return { error: 'Onboarding failed' }
   }
 
   revalidatePath('/', 'layout')

@@ -50,7 +50,11 @@ export default function OnboardingPage() {
     }
 
     try {
-      await completeOnboarding(formData)
+      const result = await completeOnboarding(formData)
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      }
     } catch (err) {
       setError('Something went wrong')
       setLoading(false)

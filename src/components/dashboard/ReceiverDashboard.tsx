@@ -150,10 +150,17 @@ export default function ReceiverDashboard({ profile }: { profile: UserProfile })
                   </div>
                   
                   <div className="flex-1 text-center sm:text-left">
-                     <div className="flex items-center gap-3 justify-center sm:justify-start">
+                     <div className="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
                         <span className={`font-black text-[9px] tracking-wider uppercase px-3 py-1 rounded-full border ${activeRequest.status === 'accepted' ? 'bg-green-100 text-green-700 border-green-200' : 'bg-amber-100 text-amber-700 border-amber-200 animate-pulse'}`}>
                             ● {activeRequest.status === 'accepted' ? 'Donor Matched' : 'Broadcasting...'}
                         </span>
+                        
+                        {activeRequest.status === 'accepted' && activeRequest.donor && (
+                           <span className="font-black text-[9px] tracking-wider uppercase px-3 py-1 rounded-full border bg-stone-900 text-white border-stone-800 animate-in fade-in duration-500">
+                               ● Voluntarily Accepted by: {activeRequest.donor.name}
+                           </span>
+                        )}
+
                         <span className="text-stone-300 font-semibold text-[10px] tracking-widest uppercase">ID: {activeRequest.id.split('-')[0].toUpperCase()}</span>
                      </div>
                      <h3 className="text-3xl font-black text-stone-900 mt-2">{activeRequest.patient_name || 'Emergency Call'}</h3>

@@ -34,7 +34,7 @@ export default function LoginPage({
           {message && <div className="mb-4 text-green-600">{message}</div>}
           {error && <div className="mb-4 text-red-600">{error}</div>}
 
-          <form action={signIn} className="space-y-6">
+          <form action={signIn as any} className="space-y-6">
             <Input name="email" type="email" placeholder="Email" required />
             <Input name="password" type="password" placeholder="Password" required />
 
@@ -45,7 +45,7 @@ export default function LoginPage({
             Or login with
           </div>
 
-          <form action={signInWithGoogle} className="mt-4">
+          <form action={signInWithGoogle as any} className="mt-4">
             <Button variant="outline" className="w-full">
               Google Authorization
             </Button>

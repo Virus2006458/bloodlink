@@ -4,7 +4,7 @@ import { createClient } from '@/lib/server-supabase'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
-export async function signUp(formData: FormData) {
+export async function signUp(formData: FormData): Promise<void> {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
@@ -29,10 +29,10 @@ export async function signUp(formData: FormData) {
   })
 
   if (error) {
-    return { error: error.message }
+    console.error(error.message)
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`)
   }
 
-  // Insert profile into public.users
   if (data.user) {
     const { error: profileError } = await supabase
       .from('users')
@@ -46,7 +46,7 @@ export async function signUp(formData: FormData) {
 
     if (profileError) {
       console.error('Profile insertion error:', profileError)
-      return { error: 'Signed up but profile creation failed. Please contact support.' }
+      redirect('/signup?error=Profile creation failed')
     }
   }
 
@@ -54,7 +54,7 @@ export async function signUp(formData: FormData) {
   redirect('/login?message=Check your email to confirm your account.')
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(formData: FormData): Promise<void> {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
@@ -66,15 +66,17 @@ export async function signIn(formData: FormData) {
   })
 
   if (error) {
-    return { error: error.message }
+    console.error(error.message)
+    redirect(`/login?error=${encodeURIComponent(error.message)}`)
   }
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
 }
 
-export async function signInWithGoogle(formData?: FormData) {
+export async function signInWithGoogle(formData: FormData): Promise<void> {
   const supabase = await createClient()
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -83,7 +85,8 @@ export async function signInWithGoogle(formData?: FormData) {
   })
 
   if (error) {
-    return { error: error.message }
+    console.error(error.message)
+    redirect('/login?error=Google login failed')
   }
 
   if (data.url) {
@@ -91,7 +94,7 @@ export async function signInWithGoogle(formData?: FormData) {
   }
 }
 
-export async function signOut() {
+export async function signOut(): Promise<void> {
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
@@ -113,7 +116,7 @@ export async function getUserProfile() {
   return profile
 }
 
-export async function completeOnboarding(formData: FormData) {
+export async function completeOnboarding(formData: FormData): Promise<void> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -138,7 +141,7 @@ export async function completeOnboarding(formData: FormData) {
 
   if (error) {
     console.error('Onboarding failed:', error)
-    return { error: error.message }
+    redirect('/onboarding?error=Onboarding failed')
   }
 
   revalidatePath('/', 'layout')

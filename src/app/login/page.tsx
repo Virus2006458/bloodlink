@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -43,7 +45,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* ✅ FIXED: direct server action */}
           <form action={signIn} className="space-y-6">
             <div className="grid gap-4">
 
@@ -81,7 +82,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Google login stays same */}
           <form action={signInWithGoogle} className="mt-8">
             <Button variant="outline" className="w-full h-14 gap-3 font-bold rounded-2xl" type="submit">
               Google Authorization

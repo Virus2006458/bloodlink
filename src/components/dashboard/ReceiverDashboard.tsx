@@ -109,7 +109,7 @@ export default function ReceiverDashboard({ profile }: { profile: UserProfile })
   if (!mounted) return null
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative mt-4">
       {/* Alert Notification */}
       {showNotification && (
         <div className="fixed top-8 right-8 z-[100] animate-in slide-in-from-right duration-500">
@@ -130,15 +130,6 @@ export default function ReceiverDashboard({ profile }: { profile: UserProfile })
 
       {/* Left Column */}
       <div className="lg:col-span-8 space-y-8">
-        <div>
-           <div className="flex items-center gap-3 text-red-600 mb-2">
-              <Activity className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Receiver Dashboard</span>
-           </div>
-           <h1 className="text-4xl font-black text-stone-900">Hello, {profile.name.split(' ')[0].toUpperCase()} 👋</h1>
-           <p className="text-stone-400 font-bold mt-1">Ready to make a difference today?</p>
-        </div>
-
         <section>
           <div className="flex items-center gap-3 mb-6">
              <div className="bg-red-600 p-2.5 rounded-xl text-white shadow-xl shadow-red-200">
@@ -241,19 +232,6 @@ export default function ReceiverDashboard({ profile }: { profile: UserProfile })
 
       {/* Right Column */}
       <div className="lg:col-span-4 space-y-6">
-         <div className="flex gap-4">
-            <Link href="/requests/new" className="flex-1">
-               <Button className="w-full h-14 rounded-2xl bg-red-600 hover:bg-red-700 shadow-xl shadow-red-100 font-black gap-2">
-                  <PlusCircle className="h-5 w-5" /> New Request
-               </Button>
-            </Link>
-            <Link href="/donors" className="flex-1">
-               <Button variant="outline" className="w-full h-14 rounded-2xl border-2 border-stone-100 font-black gap-2 hover:bg-white">
-                  <Search className="h-5 w-5" /> Search Donors
-               </Button>
-            </Link>
-         </div>
-
          <Card className="rounded-[32px] border-none p-8 shadow-xl bg-black text-white relative overflow-hidden group">
             <ShieldCheck className="absolute top-0 right-0 h-32 w-32 -mr-16 -mt-10 opacity-10" />
             <h3 className="text-2xl font-black mb-2 relative z-10">Safety First</h3>

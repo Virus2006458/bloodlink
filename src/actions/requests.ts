@@ -77,8 +77,13 @@ export async function createRequest(formData: FormData) {
     }
 
     revalidatePath('/dashboard')
-    return { success: true }
+    // Standard Next.js way to navigate from a Server Action
+    redirect('/dashboard')
   } catch (error: any) {
+    // If it's a redirect error, we should let it propagate
+    if (error.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error
+    }
     console.error('Detailed Create Request Error:', error)
     return { success: false, error: error.message || 'An unexpected server error occurred. Please check your Supabase logs.' }
   }

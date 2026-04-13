@@ -33,13 +33,19 @@ export default function CreateRequestPage() {
 
     try {
       const result = await createRequest(formData)
+      // If it reaches here and result is returned, it means it didn't redirect (error)
       if (result?.error) {
         setError(result.error)
         setLoading(false)
-      } else {
-        router.push('/dashboard')
       }
     } catch (err: any) {
+      // In Next.js, redirect() in a server action shows up as an "error" in the catch block 
+      // if not handled by the framework. But usually it's caught and handled by Next.js.
+      // If we see a redirect error, we should ignore it as the browser will redirect.
+      if (err.message?.includes('NEXT_REDIRECT')) {
+        return;
+      }
+      
       console.error('Submission failed:', err)
       setError(`Submission failed: ${err.message || 'Check your internet connection or try smaller files.'}`)
       setLoading(false)
